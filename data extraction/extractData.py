@@ -14,8 +14,8 @@ df = raw_data[raw_data['pitcher'].isin(top_20_pitchers)]
 df = df.assign(pitcher=lambda x: x['pitcher_first'] + ' ' + x['pitcher_last'])
 
 # get rid of batter and pitcher names because they're useless
-df = df.drop(['game_date', 'release_spin_rate', 'batter_first', 'pitch_name', 'batter_last', 'batter',
-              'pitcher_first', 'pitcher_last'], axis=1)
+df = df.drop(['game_date', 'release_spin_rate', 'batter_first', 'pitch_type', 'batter_last', 'batter',
+              'pitcher_first', 'pitcher_last', 'stand', 'p_throws'], axis=1)
 
 
 # normalize the rest
@@ -31,11 +31,29 @@ for col in normalized:
     normalized_mean_stdev.append([col, mean, std])
 
 # get dummies:
-# p_throws
 # pitchType
-# stand
 # pitcher
 
+df = df.rename({
+    "pitch_name": "Pitch Name",
+    "pitcher": "Pitcher",
+    "release_speed": "Release Speed",
+    "release_pos_x": "Release Position (x)",
+    "release_pos_y": "Release Position (y)",
+    "release_pos_z": "Release Position (z)",
+    "pfx_x": "PITCHf/x (x)",
+    "pfx_z": "PITCHf/x (z)",
+    "plate_x": "Plate Position (x)",
+    "plate_z": "Plate Position (z)",
+    "vx0": "Initial velocity (x)",
+    "vy0": "Initial velocity (y)",
+    "vz0": "Initial velocity (z)",
+    "ax": "Acceleration (x)",
+    "ay": "Acceleration (y)",
+    "az": "Acceleration (z)",
+    "effective_speed": "Effective Speed",
+    "release_extension": "Release Extension"
+})
 
 np.savetxt("normalized_mean_stdev.csv",
            normalized_mean_stdev, delimiter=", ", fmt='% s')
