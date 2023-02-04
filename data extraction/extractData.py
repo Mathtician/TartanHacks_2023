@@ -1,3 +1,4 @@
+# data preprocessing for ML side
 import numpy as np
 import pandas as pd
 
@@ -10,18 +11,12 @@ top_20_pitchers = raw_data['pitcher'].value_counts()[:20].index.tolist()
 df = raw_data[raw_data['pitcher'].isin(top_20_pitchers)]
 
 # record pitcher names and ids for reference
-nameList = []
+nameList = [['id', 'name']]
 for num_id in top_20_pitchers:
     firstName = df[df['pitcher'] == num_id]['pitcher_first'].values[0]
     lastName = df[df['pitcher'] == num_id]['pitcher_last'].values[0]
     name = f"{firstName} {lastName}"
     nameList.append([num_id, name])
-
-# do weird formatting with date (percentiles)
-dateList = np.sort(df['game_date'].unique())
-df = df.copy()
-df['game_date'] = df['game_date'].map(
-    lambda d: np.where(dateList == d)[0][0]/len(dateList))
 
 # get rid of batter and pitcher names because they're useless
 df = df.drop(['game_date', 'release_spin_rate', 'batter_first', 'pitch_name', 'batter_last', 'batter',
@@ -40,18 +35,16 @@ for col in normalized:
     df.loc[:, col] = (df[col] - mean)/std
     normalized_mean_stdev.append([col, mean, std])
 
-print(normalized_mean_stdev)
-
 # get dummies:
 # p_throws
 # pitchType
 # stand
 # pitcher
 
-df = pd.get_dummies(
-    df, columns=['p_throws', 'pitch_type', 'stand', 'pitcher'], drop_first=True)
-
 
 np.savetxt("normalized_mean_stdev.csv",
            normalized_mean_stdev, delimiter=", ", fmt='% s')
+np.savetxt('name_list.csv', nameList, delimiter=", ", fmt='% s')
 df.to_csv('prepared_data.csv', index=False)
+
+
