@@ -14,7 +14,7 @@ df = raw_data[raw_data['pitcher'].isin(top_20_pitchers)]
 df = df.assign(pitcher=lambda x: x['pitcher_first'] + ' ' + x['pitcher_last'])
 
 # get rid of batter and pitcher names because they're useless
-df = df.drop(['game_date', 'release_spin_rate', 'batter_first', 'pitch_name', 'batter_last', 'batter',
+df = df.drop(['game_date', 'release_spin_rate', 'batter_first', 'pitch_type', 'batter_last', 'batter',
               'pitcher_first', 'pitcher_last'], axis=1)
 
 
