@@ -17,25 +17,21 @@ for num_id in top_20_pitchers:
     name = f"{firstName} {lastName}"
     nameList.append([num_id, name])
 
-# get dummies:
-# p_throws
-# pitchType
-# stand
-# pitcher
-
 # do weird formatting with date (percentiles)
 dateList = np.sort(df['game_date'].unique())
 df = df.copy()
-df['game_date'] = df['game_date'].map(lambda d: np.where(dateList == d)[0][0]/len(dateList))
+df['game_date'] = df['game_date'].map(
+    lambda d: np.where(dateList == d)[0][0]/len(dateList))
 
 # get rid of batter and pitcher names because they're useless
-df = df.drop(['release_spin_rate', 'batter_first', 'pitch_name', 'batter_last', 'batter',
+df = df.drop(['game_date', 'release_spin_rate', 'batter_first', 'pitch_name', 'batter_last', 'batter',
               'pitcher_first', 'pitcher_last'], axis=1)
+
 
 # normalize the rest
 normalized = ['release_speed', 'release_pos_x', 'release_pos_y', 'release_pos_z', 'pfx_x', 'pfx_z',
               'plate_x', 'plate_z', 'vx0', 'vy0', 'vz0', 'ax', 'ay', 'az', 'effective_speed', 'release_extension']
-normalized_mean_stdev = []
+normalized_mean_stdev = [['variable', 'mean', 'stdev']]
 for col in normalized:
     df = df.copy()
     index = df.columns.get_loc(col)
@@ -44,7 +40,18 @@ for col in normalized:
     df.loc[:, col] = (df[col] - mean)/std
     normalized_mean_stdev.append([col, mean, std])
 
+print(normalized_mean_stdev)
+
+# get dummies:
+# p_throws
+# pitchType
+# stand
+# pitcher
+
 df = pd.get_dummies(
     df, columns=['p_throws', 'pitch_type', 'stand', 'pitcher'], drop_first=True)
 
+
+np.savetxt("normalized_mean_stdev.csv",
+           normalized_mean_stdev, delimiter=", ", fmt='% s')
 df.to_csv('prepared_data.csv', index=False)
