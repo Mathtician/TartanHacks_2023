@@ -34,7 +34,7 @@ for col in normalized:
 # pitchType
 # pitcher
 
-df = df.rename({
+df = df.rename(columns={
     "pitch_name": "Pitch Name",
     "pitcher": "Pitcher",
     "release_speed": "Release Speed",
