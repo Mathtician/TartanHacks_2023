@@ -114,3 +114,4 @@ class Imputer(nn.Module):
         
 csvData = CSVData("../data extraction/prepared_data.csv")
 print(csvData.catInfo.categories)
+print(csvData.getTrainingData(1, 0))
