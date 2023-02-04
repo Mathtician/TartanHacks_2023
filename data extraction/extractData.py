@@ -44,7 +44,7 @@ for col in normalized:
     df.loc[:, col] = (df[col] - mean)/std
     normalized_mean_stdev.append([col, mean, std])
 
-df = pd.get_dummies(
-    df, columns=['p_throws', 'pitch_type', 'stand', 'pitcher'], drop_first=True)
+#df = pd.get_dummies(
+#    df, columns=['p_throws', 'pitch_type', 'stand', 'pitcher'], drop_first=True)
 
 df.to_csv('prepared_data.csv', index=False)
