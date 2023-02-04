@@ -11,12 +11,7 @@ top_20_pitchers = raw_data['pitcher'].value_counts()[:20].index.tolist()
 df = raw_data[raw_data['pitcher'].isin(top_20_pitchers)]
 
 # record pitcher names and ids for reference
-nameList = [['id', 'name']]
-for num_id in top_20_pitchers:
-    firstName = df[df['pitcher'] == num_id]['pitcher_first'].values[0]
-    lastName = df[df['pitcher'] == num_id]['pitcher_last'].values[0]
-    name = f"{firstName} {lastName}"
-    nameList.append([num_id, name])
+df = df.assign(pitcher=lambda x: x['pitcher_first'] + ' ' + x['pitcher_last'])
 
 # get rid of batter and pitcher names because they're useless
 df = df.drop(['game_date', 'release_spin_rate', 'batter_first', 'pitch_name', 'batter_last', 'batter',
@@ -44,5 +39,4 @@ for col in normalized:
 
 np.savetxt("normalized_mean_stdev.csv",
            normalized_mean_stdev, delimiter=", ", fmt='% s')
-np.savetxt('name_list.csv', nameList, delimiter=", ", fmt='% s')
 df.to_csv('prepared_data.csv', index=False)
